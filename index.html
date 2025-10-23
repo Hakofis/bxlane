@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>BXLINE – One-Page Booking</title>
+<style>
+  :root{--brand:#00b7ff;--brand2:#0095cc;--ink:#0a2540;--bg:#f4f8fd;--card:#fff;--muted:#6b7b90;--ok:#0bb07b}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:Segoe UI,system-ui,Arial,sans-serif;background:var(--bg);color:#222}
+
+  /* Hero */
+  .hero{position:relative;height:300px;background:url('assets/airport.jpg') center/cover no-repeat;display:flex;align-items:center;justify-content:center;color:#fff;text-align:center}
+  .hero::after{content:"";position:absolute;inset:0;background:rgba(0,0,0,.45)}
+  .hero .inner{position:relative;z-index:1;padding:0 16px}
+  .hero h1{margin:0 0 8px;font-weight:800}
+  .hero p{margin:0;opacity:.95}
+
+  /* Layout */
+  .container{max-width:1100px;margin:28px auto 60px;padding:0 16px}
+
+  /* Progress */
+  .progress{display:flex;gap:8px;align-items:center;justify-content:center;margin:10px 0 22px}
+  .dot{width:26px;height:26px;border-radius:50%;background:#dfe9f5;color:#789;display:grid;place-items:center;font-weight:700;cursor:pointer}
+  .dot.active{background:var(--brand);color:#fff}
+  .bar{height:4px;background:#dfe9f5;width:80px;border-radius:10px}
+  .bar.fill{background:linear-gradient(90deg,var(--brand),var(--brand2))}
+
+  /* Steps */
+  .step{background:var(--card);border-radius:14px;box-shadow:0 12px 28px rgba(0,0,0,.08);padding:22px;margin:18px 0}
+  .step h2{margin:4px 0 6px;color:var(--ink)}
+  .sub{color:var(--muted);margin:0 0 14px}
+  label{display:block;margin:10px 0 6px;font-weight:600;color:#31465a}
+  input,select{width:100%;padding:12px;border:1px solid #cfd8e3;border-radius:8px;font-size:15px}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+  @media (max-width:900px){.grid,.grid-3{grid-template-columns:1fr}}
+
+  .btn{width:100%;padding:14px;border:0;border-radius:10px;background:var(--brand);color:#fff;font-weight:700;cursor:pointer;transition:.2s}
+  .btn:hover{background:var(--brand2)}
+  .btn.light{background:#e6f6ff;color:#083b55}
+  .btn.light:hover{background:#d8f0ff}
+
+  .note{background:#eff7ff;border-radius:10px;padding:12px;margin-top:12px}
+  .warn{background:#fff2f2;border:1px solid #ffc9c9;color:#a11;padding:10px;border-radius:8px;margin-top:10px}
+
+  #map{width:100%;height:380px;border-radius:10px;margin-top:14px}
+
+  /* Cars */
+  .cars{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+  @media (max-width:900px){.cars{grid-template-columns:1fr}}
+  .car{border:2px solid #e7eef6;border-radius:12px;overflow:hidden;background:#fff;cursor:pointer;transition:.2s}
+  .car.selected{border-color:var(--brand)}
+  .car .img{height:180px}
+  .car img{width:100%;height:100%;object-fit:cover;display:block}
+  .car img.shrink{transform:scale(0.8);transform-origin:center}
+  .car .name{padding:10px;text-align:center;font-weight:700}
+
+  /* Summary + Pay mock */
+  .summary{background:#0d1b2a;color:#eaf2ff;border-radius:14px;padding:18px}
+  .summary h3{margin:0 0 10px}
+  .price{font-size:22px;font-weight:800;color:#fff}
+  .ok{color:var(--ok);font-weight:700}
+  .payWrap{background:#f0fbff;border:1px dashed #8bd5ff;border-radius:12px;padding:14px;margin-top:12px;text-align:center}
+  .payIcons{display:flex;gap:10px;justify-content:center;align-items:center;margin-top:8px}
+  .payIcons svg{width:38px;height:26px}
+
+  /* Footer */
+  .footer-wrap{max-width:1100px;margin:0 auto 60px;padding:0 16px}
+  .hr{height:1px;background:#dbe5f0;margin:28px 0}
+  .footer{background:#ffffff;border:1px solid #e8eef6;border-radius:14px;box-shadow:0 10px 24px rgba(0,0,0,.06);padding:18px}
+  .footer h4{margin:0 0 10px;color:#0a2540}
+  .footer .fgrid{display:grid;grid-template-columns:2fr 1fr;gap:14px}
+  @media (max-width:800px){.footer .fgrid{grid-template-columns:1fr}}
+  .footer a{color:#0a66c2;text-decoration:none}
+  .footer a:hover{text-decoration:underline}
+  .small{color:#6b7b90;font-size:14px;margin-top:8px}
+
+  /* Floating buttons */
+  #waBtn{position:fixed;bottom:22px;right:22px;z-index:1000;width:60px;height:60px;border-radius:50%;background:#25D366;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 18px rgba(0,0,0,.25);border:0;cursor:pointer}
+  #waBtn svg{width:32px;height:32px;fill:#fff}
+  #backStart{position:fixed;bottom:92px;right:22px;z-index:999;width:60px;height:60px;border-radius:50%;background:var(--brand);color:#fff;border:0;cursor:pointer;font-size:22px;font-weight:800;box-shadow:0 6px 18px rgba(0,0,0,.2)}
+</style>
+</head>
+<body>
+  <!-- HERO -->
+  <section class="hero" id="top">
+    <div class="inner">
+      <h1>BXLINE Airport & City Transfers</h1>
+      <p>One-page booking • Live route on the map • Instant price</p>
+    </div>
+  </section>
+
+  <div class="container">
+    <!-- PROGRESS -->
+    <div class="progress" id="progress">
+      <div class="dot active" data-step="step1">1</div><div class="bar fill"></div>
+      <div class="dot" data-step="step2">2</div><div class="bar"></div>
+      <div class="dot" data-step="step3">3</div><div class="bar"></div>
+      <div class="dot" data-step="step4">4</div><div class="bar"></div>
+      <div class="dot" data-step="step5">5</div>
+    </div>
+
+    <!-- STEP 1 -->
+    <section class="step" id="step1">
+      <h2>Step 1 — Route</h2>
+      <p class="sub">Choose pickup & drop-off. We’ll draw the <b>red route</b> and calculate distance & time.</p>
+
+      <div class="grid">
+        <div>
+          <label>Pickup Location</label>
+          <input id="pickup" type="text" placeholder="e.g. Mortsel, Belgium" autocomplete="off" />
+        </div>
+        <div>
+          <label>Drop-off Location</label>
+          <input id="dropoff" type="text" placeholder="e.g. Brussels Airport (BRU)" autocomplete="off" />
+        </div>
+      </div>
+
+      <div class="row-actions" style="margin-top:12px;display:flex;gap:10px;flex-wrap:wrap">
+        <button class="btn" id="btnRoute">Calculate</button>
+        <button class="btn light" id="btnNext1">Next: Trip Details</button>
+      </div>
+
+      <!-- Moved result just below Next button -->
+      <div id="calcResult" class="note" style="display:none;margin-top:14px"></div>
+      <div id="calcError" class="warn" style="display:none"></div>
+
+      <div id="map"></div>
+    </section>
+
+    <!-- STEP 2 -->
+    <section class="step" id="step2" style="display:none">
+      <h2>Step 2 — Trip Details</h2>
+      <p class="sub">Pick your date & time and tell us how many passengers.</p>
+      <div class="grid-3">
+        <div><label>Date</label><input id="date" type="date" /></div>
+        <div><label>Time</label><input id="time" type="time" /></div>
+        <div><label>Passengers</label><input id="passengers" type="number" min="1" value="1" /></div>
+      </div>
+      <div class="row-actions" style="margin-top:12px;display:flex;gap:10px;flex-wrap:wrap">
+        <button class="btn light" onclick="goTo('step1')">Back</button>
+        <button class="btn" onclick="goTo('step3')">Next: Choose Vehicle</button>
+      </div>
+    </section>
+
+    <!-- STEP 3 -->
+    <section class="step" id="step3" style="display:none">
+      <h2>Step 3 — Choose Vehicle</h2>
+      <p class="sub">Select your car. (Price multiplier applies to base price.)</p>
+      <div class="cars">
+        <div class="car" data-name="Lexus" data-multi="1.00">
+          <div class="img"><img src="assets/lexus.jpg" alt="Lexus" class="shrink"></div>
+          <div class="name">Lexus · ×1.00</div>
+        </div>
+        <div class="car" data-name="Tesla Model Y" data-multi="1.15">
+          <div class="img"><img src="assets/tesla-model-y.jpg" alt="Tesla Model Y" class="shrink"></div>
+          <div class="name">Tesla Model Y · ×1.15</div>
+        </div>
+        <div class="car" data-name="Renault Arkana" data-multi="0.95">
+          <div class="img"><img src="assets/renault-arkana.jpg" alt="Renault Arkana"></div>
+          <div class="name">Renault Arkana · ×0.95</div>
+        </div>
+      </div>
+      <div class="row-actions" style="margin-top:12px;display:flex;gap:10px;flex-wrap:wrap">
+        <button class="btn light" onclick="goTo('step2')">Back</button>
+        <button class="btn" onclick="goTo('step4')">Next: Contact</button>
+      </div>
+    </section>
+
+    <!-- STEP 4 -->
+    <section class="step" id="step4" style="display:none">
+      <h2>Step 4 — Contact</h2>
+      <p class="sub">We’ll confirm your booking as soon as we receive your request.</p>
+      <div class="grid">
+        <div><label>Full Name</label><input id="name" type="text" placeholder="Your name" /></div>
+        <div><label>Email</label><input id="email" type="email" placeholder="you@email.com" /></div>
+      </div>
+      <div class="grid">
+        <div><label>Phone (WhatsApp)</label><input id="phone" type="tel" placeholder="+32 ..." /></div>
+        <div><label>Notes (optional)</label><input id="notes" type="text" placeholder="Flight no, child seat, etc." /></div>
+      </div>
+      <div class="row-actions" style="margin-top:12px;display:flex;gap:10px;flex-wrap:wrap">
+        <button class="btn light" onclick="goTo('step3')">Back</button>
+        <button class="btn" onclick="buildSummary(); goTo('step5')">Next: Review</button>
+      </div>
+    </section>
+
+    <!-- STEP 5 -->
+    <section class="step" id="step5" style="display:none">
+      <h2>Step 5 — Review & Send</h2>
+      <p class="sub">Check your details below and send your request.</p>
+      <div class="summary" id="summaryBox">
+        <h3>Your Booking</h3>
+        <p id="sRoute"></p>
+        <p id="sTime"></p>
+        <p id="sVehicle"></p>
+        <p id="sContact"></p>
+        <p class="price" id="sPrice"></p>
+        <p class="ok">We’ll confirm availability shortly.</p>
+      </div>
+
+      <!-- Payment placeholder -->
+      <div class="payWrap">
+        <div style="font-weight:700;color:#04507a">Pay Online (Card) — Coming Soon</div>
+        <div class="payIcons">
+          <svg viewBox="0 0 80 54"><rect width="80" height="54" rx="6" fill="#1a1f71"/><text x="40" y="34" text-anchor="middle" font-size="20" fill="#fff">VISA</text></svg>
+          <svg viewBox="0 0 80 54"><rect width="80" height="54" rx="6" fill="#eb001b"/><circle cx="50" cy="27" r="18" fill="#f79e1b"/><circle cx="30" cy="27" r="18" fill="#ff5f00" opacity=".75"/></svg>
+          <svg viewBox="0 0 80 54"><rect width="80" height="54" rx="6" fill="#003087"/><text x="40" y="34" text-anchor="middle" font-size="16" fill="#fff">MAESTRO</text></svg>
+        </div>
+        <div class="row-actions" style="margin-top:10px">
+          <button class="btn" id="btnPay">Pay Now</button>
+        </div>
+        <div class="small" style="text-align:center;margin-top:6px">
+          This is a preview. Payment will be activated after merchant onboarding.<br><b>Bank transfer available on request.</b>
+        </div>
+      </div>
+
+      <div class="row-actions" style="margin-top:12px;display:flex;gap:10px;flex-wrap:wrap">
+        <button class="btn" id="sendMail">Send by Email</button>
+        <button class="btn light" id="sendWA">Message on WhatsApp</button>
+      </div>
+      <div class="row-actions" style="margin-top:12px">
+        <button class="btn light" onclick="goTo('step4')">Back</button>
+      </div>
+    </section>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer-wrap">
+    <div class="hr"></div>
+    <div class="footer">
+      <div class="fgrid">
+        <div>
+          <h4>BXLANE International & Consulting BV</h4>
+          <div>Excelsiorlaan 31, <b>1930 Zaventem</b>, Belgium</div>
+          <div class="small" style="margin-top:8px">
+            <b>Phone (WhatsApp):</b> <a href="https://wa.me/32491255954" target="_blank">+32 491 25 59 54</a><br/>
+            <b>Email:</b> <a href="mailto:bxlaneinternational@gmail.com">bxlaneinternational@gmail.com</a>
+          </div>
+        </div>
+        <div>
+          <h4>Support & Bookings</h4>
+          <div class="small">Every day · 24/7</div>
+        </div>
+      </div>
+      <div class="small" style="margin-top:10px">© BXLANE International & Consulting BV</div>
+    </div>
+  </div>
+
+  <!-- Floating buttons -->
+  <button id="waBtn" title="Chat on WhatsApp" aria-label="WhatsApp">
+    <svg viewBox="0 0 32 32" aria-hidden="true">
+      <path d="M19.11 17.43c-.27-.14-1.6-.79-1.85-.88-.25-.09-.43-.14-.62.14-.18.27-.71.88-.87 1.06-.16.18-.32.2-.59.07-.27-.14-1.14-.42-2.17-1.34-.8-.71-1.34-1.58-1.5-1.85-.16-.27-.02-.41.12-.55.12-.12.27-.32.41-.48.14-.16.18-.27.27-.46.09-.18.05-.34-.02-.48-.07-.14-.62-1.5-.85-2.06-.22-.52-.44-.45-.62-.46h-.53c-.18 0-.48.07-.73.34-.25.27-.96.94-.96 2.29s.98 2.66 1.11 2.84c.14.18 1.93 2.95 4.68 4.14.65.28 1.16.45 1.55.57.65.21 1.24.18 1.71.11.52-.08 1.6-.65 1.83-1.28.23-.64.23-1.18.16-1.29-.07-.11-.25-.18-.52-.32zM16 3C9.37 3 4 8.37 4 15c0 2.12.56 4.1 1.54 5.81L4 29l8.36-1.47A11.95 11.95 0 0 0 16 27c6.63 0 12-5.37 12-12S22.63 3 16 3zm0 22.91c-1.83 0-3.53-.49-5-1.35l-.36-.21-4.96.88.91-4.84-.24-.39A9.91 9.91 0 1 1 26 15a9.91 9.91 0 0 1-10 10.91z" fill="#fff"/>
+    </svg>
+  </button>
+  <button id="backStart" title="Back to Start" aria-label="Back to Start">⟲</button>
+
+  <!-- LOGIC -->
+  <script>
+    /* ---------- Pricing model ---------- */
+    const baseFee = 30.0;      // açılış ücreti
+    const perKm   = 1.50;      // km başı
+    const minFare = 35.0;      // minimum tutar
+    const nightMultiplier   = 1.10; // 22:00–06:00 +%10
+    const weekendMultiplier = 1.05; // Cmt/Paz +%5
+
+    /* ---------- App state ---------- */
+    const defaultCountry = "be";
+    const state = {
+      origin:"", destination:"", km:null, durationText:"", price:null,
+      date:"", time:"", pax:"1", vehicle:"Lexus", multiplier:1.00,
+      name:"", email:"", phone:"", notes:""
+    };
+
+    let map, directionsService, pickupAC, dropoffAC;
+    let routePolyline = null, startMarker = null, endMarker = null;
+
+    /* ---------- Init after Google loads ---------- */
+    function initAll(){
+      map = new google.maps.Map(document.getElementById('map'), {
+        center:{lat:50.8503,lng:4.3517}, zoom:9, mapTypeControl:false, streetViewControl:false
+      });
+      directionsService = new google.maps.DirectionsService();
+
+      const opts = { componentRestrictions:{country:defaultCountry} };
+      pickupAC  = new google.maps.places.Autocomplete(document.getElementById('pickup'), opts);
+      dropoffAC = new google.maps.places.Autocomplete(document.getElementById('dropoff'), opts);
+
+      pickupAC.addListener('place_changed', maybeAutoCalc);
+      dropoffAC.addListener('place_changed', maybeAutoCalc);
+
+      document.getElementById('btnRoute').addEventListener('click', ensureRouteThen(()=>{}));
+      document.getElementById('btnNext1').addEventListener('click', ensureRouteThen(()=>goTo('step2')));
+
+      document.getElementById('sendMail').addEventListener('click', sendEmail);
+      document.getElementById('sendWA').addEventListener('click', sendWA);
+
+      document.querySelectorAll('.car').forEach(card=>{
+        card.addEventListener('click',()=>{
+          document.querySelectorAll('.car').forEach(c=>c.classList.remove('selected'));
+          card.classList.add('selected');
+          state.vehicle = card.dataset.name;
+          state.multiplier = parseFloat(card.dataset.multi);
+          if(state.km){ computePrice(); showCalcBox(); }
+        });
+      });
+      document.querySelector('.car').classList.add('selected');
+
+      // Floating buttons
+      document.getElementById('waBtn').addEventListener('click', ()=>{
+        window.open('https://wa.me/32491255954?text=Hello%2C%20I%20would%20like%20to%20book%20a%20transfer.','_blank');
+      });
+      document.getElementById('backStart').addEventListener('click', ()=>{
+        showOnly('step1');
+        document.getElementById('top').scrollIntoView({behavior:'smooth'});
+      });
+
+      // Progress bar click
+      document.querySelectorAll('.dot').forEach(dot=>{
+        dot.addEventListener('click',()=>{
+          const target = dot.getAttribute('data-step');
+          const order=['step1','step2','step3','step4','step5'];
+          const currentIndex = order.indexOf(getCurrentStepId());
+          const targetIndex  = order.indexOf(target);
+          // ileriye geçişte önce route şartı
+          if(targetIndex>currentIndex && currentIndex===0){
+            ensureRouteThen(()=>goTo(target))();
+          }else{
+            goTo(target);
+          }
+        });
+      });
+
+      // Pay mock
+      const payBtn = document.getElementById('btnPay');
+      if (payBtn) {
+        payBtn.addEventListener('click', ()=>{
+          alert('Coming soon: online card payment will be enabled after merchant onboarding.');
+        });
+      }
+    }
+
+    function getCurrentStepId(){
+      return [...document.querySelectorAll('.step')].find(s=>s.style.display!== 'none' && s.offsetParent!==null)?.id || 'step1';
+    }
+
+    /* ---------- Helpers ---------- */
+    function maybeAutoCalc(){
+      const a = document.getElementById('pickup').value.trim();
+      const b = document.getElementById('dropoff').value.trim();
+      if(a && b){ calcRoute().catch(showError); }
+    }
+
+    function ensureRouteThen(nextFn){
+      return async function(){
+        try{ await calcRoute(); nextFn && nextFn(); }
+        catch(e){ showError(e.message||e); }
+      }
+    }
+
+    function clearRoute(){
+      if(routePolyline){ routePolyline.setMap(null); routePolyline=null; }
+      if(startMarker){ startMarker.setMap(null); startMarker=null; }
+      if(endMarker){ endMarker.setMap(null); endMarker=null; }
+    }
+
+    async function calcRoute(){
+      const origin = document.getElementById('pickup').value.trim();
+      const destination = document.getElementById('dropoff').value.trim();
+      if(!origin || !destination) throw "Please enter both Pickup and Drop-off locations.";
+
+      state.origin = origin; state.destination = destination;
+      document.getElementById('calcError').style.display='none';
+
+      // Directions (for red polyline)
+      const result = await new Promise((resolve,reject)=>{
+        directionsService.route({origin, destination, travelMode:'DRIVING'},(res,status)=>{
+          if(status==='OK' && res.routes.length){ resolve(res.routes[0]); }
+          else reject("Directions error: " + status);
+        });
+      });
+
+      clearRoute();
+      const path = result.overview_path;
+      routePolyline = new google.maps.Polyline({
+        map, path, strokeColor:'#e11900', strokeWeight:6, strokeOpacity:0.95
+      });
+      startMarker = new google.maps.Marker({map, position: path[0], label:"A"});
+      endMarker   = new google.maps.Marker({map, position: path[path.length-1], label:"B"});
+      const bounds = new google.maps.LatLngBounds();
+      path.forEach(p=>bounds.extend(p));
+      map.fitBounds(bounds);
+
+      // Distance + duration
+      const svc = new google.maps.DistanceMatrixService();
+      const dmEl = await new Promise((resolve,reject)=>{
+        svc.getDistanceMatrix({
+          origins:[origin], destinations:[destination],
+          travelMode:'DRIVING', unitSystem:google.maps.UnitSystem.METRIC
+        }, (resp,status)=>{
+          if(status!=='OK') return reject("Distance Matrix error: "+status);
+          const el = resp.rows?.[0]?.elements?.[0];
+          if(!el || el.status!=='OK') return reject("Route status: "+(el?.status||'UNKNOWN'));
+          resolve(el);
+        });
+      });
+
+      state.km = dmEl.distance.value/1000;
+      state.durationText = dmEl.duration.text;
+      computePrice();
+      showCalcBox();
+    }
+
+    function showError(msg){
+      const err = document.getElementById('calcError');
+      err.style.display='block';
+      err.textContent = msg;
+    }
+
+    function computePrice(){
+      if (!state.km) return;
+
+      let subtotal = baseFee + (perKm * state.km);
+
+      if (state.date && state.time) {
+        try {
+          const dt = new Date(`${state.date}T${state.time}`);
+          const h = dt.getHours();
+          const day = dt.getDay();
+          if (h >= 22 || h < 6) subtotal *= nightMultiplier;
+          if (day === 0 || day === 6) subtotal *= weekendMultiplier;
+        } catch(e){}
+      }
+
+      subtotal *= state.multiplier;
+      if (subtotal < minFare) subtotal = minFare;
+      state.price = Math.round(subtotal); // 1€ yuvarla
+    }
+
+    function showCalcBox(){
+      const box = document.getElementById('calcResult');
+      if(state.km){
+        box.style.display='block';
+        box.innerHTML = `<b>Distance:</b> ${state.km.toFixed(1)} km &nbsp; • &nbsp;
+                         <b>Duration:</b> ${state.durationText} &nbsp; • &nbsp;
+                         <b>Estimated Price:</b> €${state.price.toFixed(0)}
+                         <br><small>Vehicle: ${state.vehicle} (×${state.multiplier.toFixed(2)})</small>`;
+      }
+    }
+
+    function showOnly(id){
+      document.querySelectorAll('.step').forEach(s=>s.style.display='none');
+      document.getElementById(id).style.display='block';
+
+      const order=['step1','step2','step3','step4','step5'];
+      const idx=order.indexOf(id);
+      const dots=[...document.querySelectorAll('.dot')];
+      const bars=[...document.querySelectorAll('.bar')];
+      dots.forEach((d,i)=>d.classList.toggle('active',i<=idx));
+      bars.forEach((b,i)=>b.classList.toggle('fill',i<idx));
+    }
+
+    function goTo(id){
+      showOnly(id);
+      document.getElementById(id).scrollIntoView({behavior:'smooth',block:'start'});
+    }
+
+    function buildSummary(){
+      if(!state.km){ alert("Please calculate the route first (Step 1)."); goTo('step1'); return; }
+      state.date=document.getElementById('date').value;
+      state.time=document.getElementById('time').value;
+      state.pax =document.getElementById('passengers').value||'1';
+      state.name=document.getElementById('name').value;
+      state.email=document.getElementById('email').value;
+      state.phone=document.getElementById('phone').value;
+      state.notes=document.getElementById('notes').value;
+
+      computePrice();
+
+      document.getElementById('sRoute').textContent =
+        `Route: ${state.origin} → ${state.destination}`;
+      document.getElementById('sTime').textContent =
+        `When: ${state.date||'-'} ${state.time||''} • Passengers: ${state.pax}`;
+      document.getElementById('sVehicle').textContent =
+        `Vehicle: ${state.vehicle} (×${state.multiplier.toFixed(2)}) • Distance: ${state.km.toFixed(1)} km • Duration: ${state.durationText}`;
+      document.getElementById('sContact').textContent =
+        `Contact: ${state.name||'-'} • ${state.email||'-'} • ${state.phone||'-'}`;
+      document.getElementById('sPrice').textContent =
+        `Estimated Price: €${state.price.toFixed(0)}`;
+    }
+
+    function composeMessage(){
+      return `Transfer Request:
+Pickup: ${state.origin}
+Drop-off: ${state.destination}
+Date: ${state.date} ${state.time}
+Passengers: ${state.pax}
+Vehicle: ${state.vehicle} (x${state.multiplier})
+Distance: ${state.km?.toFixed(1)} km
+Duration: ${state.durationText}
+Estimated Price: €${state.price?.toFixed(0)}
+Name: ${state.name}
+Email: ${state.email}
+Phone: ${state.phone}
+Notes: ${state.notes||'-'}`;
+    }
+
+    function sendEmail(){
+      buildSummary();
+      const subject=encodeURIComponent('New Transfer Request');
+      const body=encodeURIComponent(composeMessage());
+      window.location.href=`mailto:bxlaneinternational@gmail.com?subject=${subject}&body=${body}`;
+    }
+    function sendWA(){
+      buildSummary();
+      const text=encodeURIComponent(composeMessage());
+      window.open(`https://wa.me/32491255954?text=${text}`,'_blank');
+    }
+  </script>
+
+  <!-- GOOGLE MAPS -->
+  <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBB3f6S3YNUd7QndOoL4MYGQ6TycnaOLgg&libraries=places&callback=initAll">
+  </script>
+</body>
+</html>
