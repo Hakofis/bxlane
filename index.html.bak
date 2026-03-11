@@ -489,21 +489,15 @@ Notes: ${state.notes||'-'}`;
       }
     }
 
-    // 🔧 DÜZELTİLEN KISIM — e-posta alıcısı info@bxlane.be
+    // 🔧 DÜZELTİLEN KISIM — e-posta alıcısı info@bxline.be
     function sendEmail(){
       buildSummary();
       const subject=encodeURIComponent('New Transfer Request');
       const body=encodeURIComponent(composeMessage());
-      window.location.href=`mailto:info@bxlane.be?subject=${subject}&body=${body}`;
+      window.location.href=`mailto:info@bxline.be?subject=${subject}&body=${body}`;
     }
 
     function sendWA(){
       buildSummary();
       const text=encodeURIComponent(composeMessage());
-      window.open(`https://wa.me/32491255954?text=${text}`,'_blank');
-    }
-
-  </script>
-  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBB3f6S3YNUd7QndOoL4MYGQ6TycnaOLgg&libraries=places&callback=initAll" async defer></script>
-</body>
-</html>
+      window.open(`https://wa.me/32491255954?text=${text}
