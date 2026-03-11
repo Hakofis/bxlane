@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>BXLINE – One-Page Booking</title>
 <link rel="stylesheet" href="assets/style.css?v=1">
+<script src="https://js.stripe.com/v3/"></script>
 </head>
 <body>
   <!-- HERO -->
@@ -123,19 +124,20 @@
         <p class="ok">We’ll confirm availability shortly.</p>
       </div>
 
-      <!-- Payment placeholder -->
+      <!-- Payment Section -->
       <div class="payWrap">
-        <div style="font-weight:700;color:#04507a">Pay Online (Card) — Coming Soon</div>
+        <div style="font-weight:700;color:#04507a">💳 Pay Online with Card (Secure Checkout)</div>
         <div class="payIcons">
           <svg viewBox="0 0 80 54"><rect width="80" height="54" rx="6" fill="#1a1f71"/><text x="40" y="34" text-anchor="middle" font-size="20" fill="#fff">VISA</text></svg>
           <svg viewBox="0 0 80 54"><rect width="80" height="54" rx="6" fill="#eb001b"/><circle cx="50" cy="27" r="18" fill="#f79e1b"/><circle cx="30" cy="27" r="18" fill="#ff5f00" opacity=".75"/></svg>
           <svg viewBox="0 0 80 54"><rect width="80" height="54" rx="6" fill="#003087"/><text x="40" y="34" text-anchor="middle" font-size="16" fill="#fff">MAESTRO</text></svg>
         </div>
         <div class="row-actions" style="margin-top:10px">
-          <button class="btn" id="btnPay">Pay Now</button>
+          <button class="btn" id="btnPay">Pay Now with Stripe</button>
         </div>
         <div class="small" style="text-align:center;margin-top:6px">
-          This is a preview. Payment will be activated after merchant onboarding.<br><b>Bank transfer available on request.</b>
+          🔒 Secure payment powered by Stripe • All major cards accepted<br>
+          <b>Bank transfer also available on request.</b>
         </div>
       </div>
 
@@ -161,7 +163,7 @@
             <b>Phone (WhatsApp):</b>
             <a href="https://wa.me/32491255954" target="_blank">+32 491 25 59 54</a><br/>
             <b>Email:</b>
-            <a href="mailto:info@bxline.be">info@bxline.be</a>
+            <a href="/cdn-cgi/l/email-protection#a8c1c6cec7e8cad0c4c1c6cd86cacd"><span class="__cf_email__" data-cfemail="f49d9a929bb4968c989d9a91da9691">[email&#160;protected]</span></a>
           </div>
         </div>
         <div>
@@ -182,7 +184,7 @@
   <button id="backStart" title="Back to Start" aria-label="Back to Start">⟲</button>
 
   <!-- LOGIC -->
-  <script>
+  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
     /* ---------- Pricing model ---------- */
     const baseFee = 30.0;
     const perKm   = 1.50;
@@ -207,7 +209,7 @@
       });
       directionsService = new google.maps.DirectionsService();
 
-      const opts = { componentRestrictions:{country:defaultCountry} };
+      const opts = {}; // No country restriction — allows international routes
       pickupAC  = new google.maps.places.Autocomplete(document.getElementById('pickup'), opts);
       dropoffAC = new google.maps.places.Autocomplete(document.getElementById('dropoff'), opts);
 
@@ -255,9 +257,7 @@
 
       const payBtn = document.getElementById('btnPay');
       if (payBtn) {
-        payBtn.addEventListener('click', ()=>{
-          alert('Coming soon: online card payment will be enabled after merchant onboarding.');
-        });
+        payBtn.addEventListener('click', handlePayment);
       }
     }
 
@@ -424,6 +424,70 @@ Phone: ${state.phone}
 Notes: ${state.notes||'-'}`;
     }
 
+    // Stripe Payment Handler
+    async function handlePayment(){
+      // Ensure all booking details are captured
+      buildSummary();
+      
+      // Validate required fields
+      if(!state.km || !state.price){
+        alert("Please complete the booking process first (calculate route and review details).");
+        return;
+      }
+      
+      if(!state.name || !state.email){
+        alert("Please provide your name and email in Step 4 (Contact).");
+        goTo('step4');
+        return;
+      }
+
+      // Show loading state
+      const payBtn = document.getElementById('btnPay');
+      const originalText = payBtn.textContent;
+      payBtn.textContent = 'Processing...';
+      payBtn.disabled = true;
+
+      try {
+        // Call backend to create Stripe Checkout session
+        const response = await fetch('/create-checkout-session', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            origin: state.origin,
+            destination: state.destination,
+            date: state.date,
+            time: state.time,
+            passengers: state.pax,
+            vehicle: state.vehicle,
+            multiplier: state.multiplier,
+            distance: state.km.toFixed(1),
+            duration: state.durationText,
+            price: state.price,
+            name: state.name,
+            email: state.email,
+            phone: state.phone,
+            notes: state.notes
+          })
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to create checkout session');
+        }
+
+        const { url } = await response.json();
+        
+        // Redirect to Stripe Checkout
+        window.location.href = url;
+      } catch (error) {
+        console.error('Payment error:', error);
+        alert('Unable to process payment. Please try again or contact support.');
+        payBtn.textContent = originalText;
+        payBtn.disabled = false;
+      }
+    }
+
     // 🔧 DÜZELTİLEN KISIM — e-posta alıcısı info@bxline.be
     function sendEmail(){
       buildSummary();
@@ -435,13 +499,4 @@ Notes: ${state.notes||'-'}`;
     function sendWA(){
       buildSummary();
       const text=encodeURIComponent(composeMessage());
-      window.open(`https://wa.me/32491255954?text=${text}`,'_blank');
-    }
-  </script>
-
-  <!-- GOOGLE MAPS -->
-  <script async defer
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBB3f6S3YNUd7QndOoL4MYGQ6TycnaOLgg&libraries=places&callback=initAll">
-  </script>
-</body>
-</html>
+      window.open(`https://wa.me/32491255954?text=${text}
