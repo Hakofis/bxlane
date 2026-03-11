@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Payment Successful - BXLINE</title>
+<link rel="stylesheet" href="assets/style.css?v=1">
+<style>
+  .success-container {
+    max-width: 700px;
+    margin: 40px auto;
+    padding: 30px;
+    text-align: center;
+  }
+  .success-icon {
+    font-size: 80px;
+    color: #28a745;
+    margin-bottom: 20px;
+  }
+  .success-title {
+    font-size: 32px;
+    color: #04507a;
+    margin-bottom: 15px;
+    font-weight: 700;
+  }
+  .success-message {
+    font-size: 18px;
+    color: #333;
+    margin-bottom: 30px;
+    line-height: 1.6;
+  }
+  .booking-details {
+    background: #f8f9fa;
+    border-radius: 10px;
+    padding: 25px;
+    margin: 30px 0;
+    text-align: left;
+    border: 2px solid #e9ecef;
+  }
+  .booking-details h3 {
+    color: #04507a;
+    margin-bottom: 15px;
+    font-size: 22px;
+  }
+  .detail-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid #dee2e6;
+  }
+  .detail-row:last-child {
+    border-bottom: none;
+    font-weight: 700;
+    font-size: 20px;
+    color: #04507a;
+    padding-top: 15px;
+  }
+  .detail-label {
+    font-weight: 600;
+    color: #666;
+  }
+  .detail-value {
+    color: #333;
+    text-align: right;
+  }
+  .info-box {
+    background: #d1ecf1;
+    border: 1px solid #bee5eb;
+    border-radius: 8px;
+    padding: 20px;
+    margin: 20px 0;
+    color: #0c5460;
+  }
+  .info-box strong {
+    display: block;
+    margin-bottom: 10px;
+    font-size: 16px;
+  }
+  .action-buttons {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    margin-top: 30px;
+    flex-wrap: wrap;
+  }
+  .btn {
+    padding: 12px 30px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    transition: all 0.3s ease;
+  }
+  .btn-primary {
+    background: #04507a;
+    color: white;
+  }
+  .btn-primary:hover {
+    background: #033b5a;
+  }
+  .btn-secondary {
+    background: #6c757d;
+    color: white;
+  }
+  .btn-secondary:hover {
+    background: #5a6268;
+  }
+  .btn-whatsapp {
+    background: #25D366;
+    color: white;
+  }
+  .btn-whatsapp:hover {
+    background: #20ba5a;
+  }
+  .loading {
+    text-align: center;
+    padding: 40px;
+  }
+  .spinner {
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #04507a;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 20px;
+  }
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+</style>
+</head>
+<body>
+  <!-- HERO -->
+  <section class="hero" style="padding:30px 20px">
+    <div class="inner">
+      <h1>BXLINE Airport & City Transfers</h1>
+    </div>
+  </section>
+
+  <div class="container">
+    <div class="success-container">
+      <div id="loadingSection" class="loading">
+        <div class="spinner"></div>
+        <p>Loading payment details...</p>
+      </div>
+
+      <div id="successSection" style="display:none;">
+        <div class="success-icon">✓</div>
+        <h1 class="success-title">Payment Successful!</h1>
+        <p class="success-message">
+          Thank you for your payment. Your booking has been confirmed and you will receive a confirmation email shortly.
+        </p>
+
+        <div class="booking-details" id="bookingDetails">
+          <h3>📋 Booking Details</h3>
+          <div id="detailsContent">Loading...</div>
+        </div>
+
+        <div class="info-box">
+          <strong>📧 What happens next?</strong>
+          <ul style="text-align: left; margin: 10px 0 0 20px; line-height: 1.8;">
+            <li>You'll receive a confirmation email with your booking details</li>
+            <li>Our driver will contact you 24 hours before your transfer</li>
+            <li>Track your driver in real-time on the day of your transfer</li>
+            <li>For any questions, contact us via WhatsApp or email</li>
+          </ul>
+        </div>
+
+        <div class="action-buttons">
+          <a href="/" class="btn btn-primary">Book Another Transfer</a>
+          <a href="https://wa.me/32491255954?text=Hi%2C%20I%20just%20completed%20a%20booking" target="_blank" class="btn btn-whatsapp">Contact on WhatsApp</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer-wrap">
+    <div class="hr"></div>
+    <div class="footer">
+      <div class="fgrid">
+        <div>
+          <h4>BXLANE International & Consulting BV</h4>
+          <div>Excelsiorlaan 31, <b>1930 Zaventem</b>, Belgium</div>
+          <div class="small" style="margin-top:8px">
+            <b>Phone (WhatsApp):</b>
+            <a href="https://wa.me/32491255954" target="_blank">+32 491 25 59 54</a><br/>
+            <b>Email:</b>
+            <a href="mailto:info@bxline.be">info@bxline.be</a>
+          </div>
+        </div>
+        <div>
+          <h4>Support & Bookings</h4>
+          <div class="small">Every day · 24/7</div>
+        </div>
+      </div>
+      <div class="small" style="margin-top:10px">© BXLANE International & Consulting BV</div>
+    </div>
+  </div>
+
+  <script>
+    // Get session ID from URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const sessionId = urlParams.get('session_id');
+
+    async function loadBookingDetails() {
+      if (!sessionId) {
+        document.getElementById('loadingSection').innerHTML = 
+          '<p style="color: #dc3545;">❌ No session ID found. Please check your booking confirmation email.</p>';
+        return;
+      }
+
+      try {
+        const response = await fetch(`/checkout-session?session_id=${sessionId}`);
+        if (!response.ok) throw new Error('Failed to fetch session details');
+        
+        const data = await response.json();
+        const metadata = data.metadata;
+
+        // Build booking details HTML
+        let detailsHTML = '';
+        
+        if (metadata) {
+          detailsHTML += `
+            <div class="detail-row">
+              <span class="detail-label">Route:</span>
+              <span class="detail-value">${metadata.origin} → ${metadata.destination}</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">Date & Time:</span>
+              <span class="detail-value">${metadata.date} ${metadata.time}</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">Vehicle:</span>
+              <span class="detail-value">${metadata.vehicle}</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">Distance:</span>
+              <span class="detail-value">${metadata.distance} km</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">Duration:</span>
+              <span class="detail-value">${metadata.duration}</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">Passengers:</span>
+              <span class="detail-value">${metadata.passengers}</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">Contact:</span>
+              <span class="detail-value">${metadata.customer_name} • ${metadata.customer_email}</span>
+            </div>
+          `;
+        }
+        
+        detailsHTML += `
+          <div class="detail-row">
+            <span class="detail-label">Amount Paid:</span>
+            <span class="detail-value">€${data.amount_total.toFixed(2)}</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Payment Status:</span>
+            <span class="detail-value" style="color: #28a745;">✓ ${data.status.toUpperCase()}</span>
+          </div>
+        `;
+
+        document.getElementById('detailsContent').innerHTML = detailsHTML;
+        document.getElementById('loadingSection').style.display = 'none';
+        document.getElementById('successSection').style.display = 'block';
+      } catch (error) {
+        console.error('Error loading booking details:', error);
+        document.getElementById('loadingSection').innerHTML = 
+          '<p style="color: #dc3545;">❌ Error loading booking details. Please contact support.</p>';
+      }
+    }
+
+    // Load booking details on page load
+    loadBookingDetails();
+  </script>
+</body>
+</html>
