@@ -1,4 +1,4 @@
-# 🚗 BXLINE Airport Transfer Booking Website
+# 🚗 BXLANE Airport Transfer Booking Website
 
 A modern, single-page booking website for airport and city transfers with integrated Stripe payment processing.
 
@@ -30,7 +30,7 @@ Before you begin, ensure you have the following installed:
 
 ```powershell
 # 1. Navigate to project folder
-cd bxline_website
+cd bxlane_website
 
 # 2. Install dependencies
 npm install
@@ -46,7 +46,7 @@ npm start
 
 ```bash
 # 1. Navigate to project folder
-cd bxline_website
+cd bxlane_website
 
 # 2. Install dependencies
 npm install
@@ -94,7 +94,7 @@ For more test cards, visit: [Stripe Test Cards Documentation](https://stripe.com
 ## 📁 Project Structure
 
 ```
-bxline_website/
+bxlane_website/
 ├── server.js              # Express server with Stripe integration
 ├── index.html             # Main booking page
 ├── success.html           # Payment success page
@@ -268,7 +268,7 @@ Health check endpoint.
 ```json
 {
   "status": "ok",
-  "message": "BXLINE server is running"
+  "message": "BXLANE server is running"
 }
 ```
 
@@ -301,7 +301,7 @@ Before deploying to production:
 **BXLANE International & Consulting BV**
 - Address: Excelsiorlaan 31, 1930 Zaventem, Belgium
 - Phone/WhatsApp: [+32 491 25 59 54](https://wa.me/32491255954)
-- Email: [info@bxline.be](mailto:info@bxline.be)
+- Email: [info@bxlane.be](mailto:info@bxlane.be)
 - Support: Available 24/7
 
 ## 🐛 Troubleshooting
